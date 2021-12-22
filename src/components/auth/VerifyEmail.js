@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
 
-const VerifyEmail = (props) => {
+const VerifyEmail = () => {
     // const token = props.match.params.token;
     let { token } = useParams();
-    console.log(token);
     const [message, setMessage] = useState();
 
     useEffect(() => {

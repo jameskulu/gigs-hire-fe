@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import { TextField } from './TextField';
 import { toast } from 'react-toastify';
+import UserContext from '../../context/UserContext';
 
 const Signup = () => {
     const navigate = useNavigate();
+    const { userData, setUserData } = useContext(UserContext);
 
     const handleLoginUser = async (values) => {
         try {
@@ -16,11 +18,16 @@ const Signup = () => {
                 password: values.password,
             };
 
-            await axios.post(
+            const loginResponse = await axios.post(
                 `${process.env.REACT_APP_SERVER_URL}/accounts/login/`,
                 data
             );
-            toast.success('Logged IN.');
+            setUserData({
+                token: loginResponse.data.token,
+                user: loginResponse.data.data,
+            });
+            localStorage.setItem('auth-token', loginResponse.data.token);
+            toast.success('You are logged in successfully.');
             navigate('/');
         } catch (err) {
             console.log(err.response.data.details);
@@ -67,6 +74,9 @@ const Signup = () => {
                                 id="exampleInputPassword1"
                             />
                         </div>
+                        <p>
+                            <Link to="/forgot-password">Forgot Password ?</Link>
+                        </p>
                         <button type="submit" class="btn btn-primary">
                             Login
                         </button>
